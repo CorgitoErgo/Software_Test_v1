@@ -16,9 +16,9 @@
 #define imu_port 7
 
 //turning PID
-#define turn_kP 0.91
-#define turn_kI 0.0009
-#define turn_kD 0.004
+#define turn_kP 1.87
+#define turn_kI 0.1
+#define turn_kD 0.15
 
 //drive PID
 #define drive_kP 6

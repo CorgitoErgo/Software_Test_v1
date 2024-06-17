@@ -58,6 +58,16 @@ void serialRead(void* params) {
         int32_t nRead = vexGenericSerialReceive(SERIALPORT - 1, buffer, len);
         //master.print(0,0,"%d",nRead);
         // Now parse the data
+        if(master.get_digital(DIGITAL_Y) || imu_reset == true){
+            vexGenericSerialTransmit(SERIALPORT - 1, (uint8_t *)msg3, 2);
+            distX = 0;
+            distY = 0;
+            headingValue = 0;
+            readSerial = true;
+            imu_reset = false;
+            imu_sensor.tare_heading();
+            pros::delay(70);
+        }
         
         if (nRead >= 0 && readSerial) {
             
@@ -68,16 +78,6 @@ void serialRead(void* params) {
             bool recordAngle = false;
             bool recordOpticalX = false;
             bool recordOpticalY = false;
-            if(master.get_digital(DIGITAL_Y) || imu_reset == true){
-                vexGenericSerialTransmit(SERIALPORT - 1, (uint8_t *)msg3, 2);
-                distX = 0;
-                distY = 0;
-                headingValue = 0;
-                readSerial = true;
-                imu_reset = false;
-                imu_sensor.tare_heading();
-                pros::delay(20);
-            }
             
             // Go through characters
             for (int i = 0; i < nRead; i++) {
@@ -147,7 +147,7 @@ void serialRead(void* params) {
         }
     
         // Delay to let serial data arrive
-        pros::delay(20);
+        pros::delay(10);
         //master.print(0, 6, "%.2lf", headingValue);
         pros::Task::delay(15);
         /*if(toggle){

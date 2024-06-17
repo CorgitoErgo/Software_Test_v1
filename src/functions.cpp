@@ -139,34 +139,32 @@ void turn_pid_int(double target, bool turnLeft = false){
 
 void turn_pid_ext(double target, bool turnLeft = false){
     double error, integral, derivative, prevError;
-    double integral_threshold = 60;
+    double integral_threshold = 110;
     bool turnL, turnR = false;
     //imu_sensor.tare();
-    imu_reset = true;
-    pros::delay(500);
     error = target - headingValue;
     if (error > 180.0) {
-        turnL = true;
-    } else if (error < -180.0) {
         turnR = true;
+    } else if (error < -180.0) {
+        turnL = true;
     }
+    //imu_reset = true;
+    pros::delay(100);
 
     while(true){
         //error = target - imu_sensor.get_rotation();
         error = fabs(target - headingValue);
-        if (integral > integral_threshold) {
-            integral = 0;
-        } else{
+        if (integral < integral_threshold) {
             integral += error;
         }
 
         derivative = error - prevError;
 
-        double power = fabs(turn_kP * error + turn_kI * integral + turn_kD * derivative);
+        double power = fabs(turn_kP * error + turn_kI * integral + turn_kD * derivative)/360 * 90;
 
         prevError = error;
         
-        if (fabs(error) < 1.0) {
+        if (fabs(error) < 1.5) {
             lf.brake();
             lb.brake();
             rf.brake();
@@ -178,8 +176,8 @@ void turn_pid_ext(double target, bool turnLeft = false){
             break;
         }
 
-        if(fabs(power)>=80)
-			power = 80;
+        if(fabs(power)>=90)
+			power = 90;
 
         if(turnR == true){
             lf.move_velocity(power);
@@ -187,7 +185,7 @@ void turn_pid_ext(double target, bool turnLeft = false){
             rf.move_velocity(-power);
             rb.move_velocity(-power);
         }
-        else{
+        else if(turnL == true){
             lf.move_velocity(-power);
             lb.move_velocity(-power);
             rf.move_velocity(power);
