@@ -16,10 +16,10 @@ using namespace okapi;
 #define distance_per_rev 219.440410     //circumference
 #define distance_per_deg 0.609556694 
 
-#define lf_motor 20
-#define lb_motor 10
-#define rf_motor 11
-#define rb_motor 1
+#define lf_motor 9
+#define lb_motor 18
+#define rf_motor 10
+#define rb_motor 20
 #define imu_portL 7
 #define imu_portR 6
 
@@ -29,9 +29,9 @@ using namespace okapi;
 #define turn_kD 0
 
 //drive PID
-#define drive_kP 0.95
+#define drive_kP 1
 #define drive_kI 0
-#define drive_kD 0.52
+#define drive_kD 0
 
 //Splines
 #define RPS              600 / 60       // rev per second (600rpm / 60sec)
